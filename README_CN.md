@@ -1,25 +1,22 @@
 # ToyVM
 [中文](README_CN.md)[English](README.md)
-A Python virtual machine written in Python.
-Compatible with python3.10 instructions.
-The runtime environment requires Python version 3.10.
-
-## Usage
+一个用Python编写的Python虚拟机，兼容Python3.10指令，运行环境需要Python版本3.10。
+## 用法
 ```shell
 python3.10 main.py examples/basic.py
 ```
 
-The VM terminal UI is enabled:
+开启虚拟机终端UI
 ```shell
 python3.10 main.py examples/yield_producer_consumer.py --enable-vis --pause=0.5
 ```
 
-Running simple tests:
+运行简单测试
 ```
 ./run_tests.sh
 ```
 
-Completed (partially completed) instructions:
+已完成（部分完成）指令：
 - [x] POP_TOP
 - [x] ROT_TWO
 - [x] ROT_THREE
@@ -111,7 +108,7 @@ Completed (partially completed) instructions:
 - [x] SET_UPDATE
 - [x] DICT_MERGE
 
-Unimplemented instructions:
+未完成指令:
 - [ ] DUP_TOP_TWO
 - [ ] ROT_FOUR
 - [ ] GET_LEN

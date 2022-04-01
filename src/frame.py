@@ -133,3 +133,6 @@ class Frame:
 
     def returned(self):
         return self.f_state == FrameState.RETURNED
+
+    def __repr__(self):
+        return '<Frame {}>'.format(repr(self.f_code.co_name))

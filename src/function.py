@@ -67,6 +67,9 @@ class Function:
     def varnames(self):
         return self.func_code.co_varnames
 
+    def __repr__(self):
+        return '<Function {}>'.format(repr(self.func_name))
+
     def __get__(self, instance, owner):
         if instance is not None:
             return partial(self, instance)

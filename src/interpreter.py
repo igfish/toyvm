@@ -1,6 +1,9 @@
 import dis
+import time
+from functools import wraps
 from types import CodeType, CoroutineType
 from typing import Any
+from typing import Generator as NaiveGenerator
 
 from src.frame import Frame, FrameState
 from src.function import Cell, Function, Generator
@@ -11,8 +14,14 @@ OPMAP = {v: k for k, v in dis.opmap.items()}
 
 class Interpreter:
 
-    def __init__(self):
+    def __init__(self, drawer: NaiveGenerator = None, enable_vis: bool = False, pause: float = 0.05):
+        self.drawer = drawer
+        self.enabel_vis = enable_vis
+        self.pause = pause
+        self.outputs = []
         self.builtins = __builtins__.copy()
+        if self.enabel_vis:
+            self.builtins['print'] = self.print
         self.frame: Frame = None
         self.return_value: Any = None
         self.extended_arg = 0
@@ -24,18 +33,22 @@ class Interpreter:
         kwargs.update(frame.locals)
         return metaclass(name, bases, kwargs)
 
+    @wraps(print)
+    def print(self, *values, end='\n'):
+        self.outputs.append(' '.join(map(str, values)) + end)
+
     def make_frame(self, func: Function, args: tuple[Any]):
         return Frame(
             func.code, self.frame, func.globals, args,
             func.defaults, self.frame.builtins, func.closure)
 
-    def eval_generator(self, gtor: Generator):
-        pass
-
     def eval_frame(self, frame: Frame):
         self.frame = frame
         self.frame.state = FrameState.EXECUTING
         while self.frame.can_advance():
+            if self.enabel_vis:
+                self.drawer.send((self.frame, self.outputs))
+                time.sleep(self.pause)
             opcode, oparg = self.frame.next_instr()
             # print(f'{OPMAP[opcode]}  {oparg}')
             oparg |= (self.extended_arg << 8)
